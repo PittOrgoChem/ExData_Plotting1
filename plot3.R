@@ -1,0 +1,15 @@
+power <- read.table("household_power_consumption.txt", header = FALSE, sep=";", stringsAsFactors = FALSE)
+colnames(power) <- power[1, ]
+power = power[-1, ]
+power[, 1] <- as.Date(power$Date, "%d/%m/%Y")
+useful <- subset(power, Date >= "2007-02-01" & Date <= "2007-02-02")
+useful[, "Global_active_power"] <- as.numeric(useful$Global_active_power)
+useful$Date <- paste(useful$Date, useful$Time, sep=" ")
+useful$Date <- as.POSIXlt(useful$Date)
+plot(useful$Date, useful$Sub_metering_1, xlab="", ylab="Energy sub metering", type="n")
+lines(useful$Date, useful$Sub_metering_1)
+lines(useful$Date, useful$Sub_metering_2, col="red")
+lines(useful$Date, useful$Sub_metering_3, col="blue")
+legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red", "blue"), lty=c(1, 1, 1), cex = 0.50, pt.cex=1)
+dev.copy(png, file="plot3.png", width=480, height=480)
+dev.off()
